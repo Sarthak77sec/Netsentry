@@ -6,6 +6,12 @@ def process_packet(packet):
     if IP in packet:
         src_ip= packet[IP].src
         dest_ip=packet[IP].dst
-        proto=packet[IP].proto
+        
+         if TCP in packet:
+            src_port=packet[TCP].sport
+            dest_port=packet[TCP].dport
+            flags=packet[TCP].flags
+            
+            
 
-        print(f"{src_ip}->{dest_ip}| proto:{proto}")
+        
