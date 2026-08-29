@@ -20,4 +20,4 @@ def process_packet(packet):
              print(f"UDP{src_ip}:{src_port}->{dest_ip}:{dst_port}")
 
         else:
-            print(f"other IP proto:{src_ip}:{dst_port}")
+            print(f"other IP proto:{src_ip}->{dest_ip}")
