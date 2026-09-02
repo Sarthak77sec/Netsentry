@@ -19,3 +19,13 @@ def init_db():
     """)
     conn.commit()
     conn.close()
+
+def insert_packet(conn,timestamp,src_ip,dst_ip,protocol,src_port,dst_port,flags):
+    cursor=conn.cursor()
+    cursor.execute("""
+    INSERT into packet(timestamp,src_ip,dst_ip,protocol,src_port,dst_port,flags)
+    VALUES(?,?,?,?,?,?,?)
+    """,(timestamp,src_ip,dst_ip,protocol,src_port,dst_port,flags)
+    )
+    conn.commit()
+        
