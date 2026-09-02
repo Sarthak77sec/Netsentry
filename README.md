@@ -74,7 +74,7 @@ netsentry/
 ## Roadmap
 
 - [x] Project scaffolding
-- [ ] Live packet sniffer (Scapy)
+- [x] Live packet sniffer (Scapy)
 - [ ] SQLite logging
 - [ ] Signature-based rule engine (port scan, ICMP flood, malicious ports)
 - [ ] Alerting
