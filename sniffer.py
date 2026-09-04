@@ -16,7 +16,7 @@ def process_packet(packet):
         if TCP in packet:
             src_port=packet[TCP].sport
             dst_port=packet[TCP].dport
-            flags=packet[TCP].flags
+            flags=str(packet[TCP].flags)
             timestamp=str(datetime.now())
             print(f"TCP{src_ip}:{src_port}->{dest_ip}:{dst_port} flags={flags}")
             insert_packet(conn,timestamp,src_ip,dest_ip,"TCPv4",src_port,dst_port,flags)
@@ -29,7 +29,7 @@ def process_packet(packet):
              insert_packet(conn,
                            timestamp,
                            src_ip,
-                           dest_ip,"UDPv4",src_port,dst_port,flags)
+                           dest_ip,"UDPv4",src_port,dst_port,flags=None)
 
 
         else:
@@ -48,7 +48,7 @@ def process_packet(packet):
             if TCP in packet:
                 src_port=packet[TCP].sport
                 dst_port=packet[TCP].dport
-                flags=packet[TCP].flags
+                flags=str(packet[TCP].flags)
                 timestamp=str(datetime.now())
                 print(f"TCP6{src_ip}:{src_port}->{dest_ip}:{dst_port} flags={flags}")
                 insert_packet(conn,timestamp,src_ip,dest_ip,"TCPv6",src_port,dst_port,flags)
@@ -58,7 +58,7 @@ def process_packet(packet):
                  dst_port=packet[UDP].dport
                  print(f"UDP6 {src_ip}:{src_port}->{dest_ip}:{dst_port}")
                  timestamp=str(datetime.now())
-                 insert_packet(conn,timestamp,src_ip,dest_ip,"UDPv6",src_port,dst_port,flags)  
+                 insert_packet(conn,timestamp,src_ip,dest_ip,"UDPv6",src_port,dst_port,flags=None)  
             else:
                  print(f"other IPV6 proto {src_ip}->{dest_ip}")  
                  timestamp=str(datetime.now())
