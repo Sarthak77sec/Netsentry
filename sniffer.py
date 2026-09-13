@@ -2,6 +2,7 @@ from scapy.all import sniff,IP,TCP,UDP,IPv6
 import sqlite3
 from db import insert_packet
 from datetime import datetime
+from rule_engine import*
 
 conn=sqlite3.connect("data/netsentry.db")
 
@@ -20,6 +21,9 @@ def process_packet(packet):
             timestamp=str(datetime.now())
             print(f"TCP{src_ip}:{src_port}->{dest_ip}:{dst_port} flags={flags}")
             insert_packet(conn,timestamp,src_ip,dest_ip,"TCPv4",src_port,dst_port,flags)
+            record_activity(src_ip,dst_port)
+            check_port_scan(src_ip)
+
 
         elif UDP in packet:
              src_port=packet[UDP].sport
@@ -30,6 +34,8 @@ def process_packet(packet):
                            timestamp,
                            src_ip,
                            dest_ip,"UDPv4",src_port,dst_port,flags=None)
+             record_activity(src_ip,dst_port)
+             check_port_scan(src_ip)
 
 
         else:
@@ -40,6 +46,7 @@ def process_packet(packet):
                           src_port=None,
                           dst_port=None
                           ,flags=None)
+            
 
     elif IPv6 in packet:
             src_ip=packet[IPv6].src
@@ -52,13 +59,18 @@ def process_packet(packet):
                 timestamp=str(datetime.now())
                 print(f"TCP6{src_ip}:{src_port}->{dest_ip}:{dst_port} flags={flags}")
                 insert_packet(conn,timestamp,src_ip,dest_ip,"TCPv6",src_port,dst_port,flags)
+                record_activity(src_ip,dst_port)
+                check_port_scan(src_ip)
 
             elif UDP in packet:
                  src_port=packet[UDP].sport
                  dst_port=packet[UDP].dport
                  print(f"UDP6 {src_ip}:{src_port}->{dest_ip}:{dst_port}")
                  timestamp=str(datetime.now())
-                 insert_packet(conn,timestamp,src_ip,dest_ip,"UDPv6",src_port,dst_port,flags=None)  
+                 insert_packet(conn,timestamp,src_ip,dest_ip,"UDPv6",src_port,dst_port,flags=None)
+                 record_activity(src_ip,dst_port)
+                 check_port_scan(src_ip)  
+                 
             else:
                  print(f"other IPV6 proto {src_ip}->{dest_ip}")  
                  timestamp=str(datetime.now())
