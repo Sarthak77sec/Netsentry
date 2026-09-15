@@ -1,4 +1,4 @@
-from scapy.all import sniff,IP,TCP,UDP,IPv6
+from scapy.all import sniff,IP,TCP,UDP,IPv6,ICMP
 import sqlite3
 from db import insert_packet
 from datetime import datetime
@@ -36,7 +36,24 @@ def process_packet(packet):
                            dest_ip,"UDPv4",src_port,dst_port,flags=None)
              record_activity(src_ip,dst_port)
              check_port_scan(src_ip)
+             
+        elif ICMP in packet:
+             timestamp = str(datetime.now())
 
+             print(f"ICMP {src_ip}->{dest_ip}")
+
+             insert_packet(
+                  conn,
+                  timestamp,
+                  src_ip,
+                  dest_ip,
+                  "ICMPv4",
+                  src_port=None,
+                  dst_port=None,
+                  flags=None)
+
+             record_icmp(src_ip)
+             check_icmp_flood(src_ip)
 
         else:
             print(f"other IP proto:{src_ip}->{dest_ip}")
