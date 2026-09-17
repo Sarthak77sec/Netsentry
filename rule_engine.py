@@ -1,8 +1,21 @@
 from collections import defaultdict
 import time
+import json
 
 recent_activity=defaultdict(list)
-
+def load_rules():
+     with open("rules.json","r") as f:
+          data=json.load(f)
+          return data["rules"]
+     
+def get_rule(rule_type):
+     rules=load_rules()
+     for rule in rules:
+          if rule["type"] == rule_type:
+               return rule
+          return None
+     
+     
 def record_activity(src_ip,dst_port):
     now=time.time()
     recent_activity[src_ip].append((now,dst_port))
