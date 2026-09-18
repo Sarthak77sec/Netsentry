@@ -1,0 +1,20 @@
+{
+  "rules": [
+    {
+      "id": 1,
+      "name": "Port Scan Detection",
+      "type": "port_scan",
+      "unique_ports_threshold": 15,
+      "window_seconds": 10,
+      "severity": "high"
+    },
+    {
+      "id": 2,
+      "name": "ICMP Flood",
+      "type": "icmp_flood",
+      "packet_threshold": 20,
+      "window_seconds": 5,
+      "severity": "medium"
+    }
+  ]
+}
