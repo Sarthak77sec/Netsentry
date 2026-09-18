@@ -4,7 +4,7 @@ from db import insert_packet
 from datetime import datetime
 from rule_engine import*
 
-conn=sqlite3.connect("data/netsentry.db")
+conn=sqlite3.connect("data/netsentry.db",timeout=10)
 
 def start_sniffing(interface=None, count=0):
     sniff(iface=interface,prn=process_packet,count=count,store=False)
