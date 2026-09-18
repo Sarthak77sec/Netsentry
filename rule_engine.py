@@ -13,7 +13,7 @@ def get_rule(rule_type):
      for rule in rules:
           if rule["type"] == rule_type:
                return rule
-          return None
+     return None
      
      
 def record_activity(src_ip,dst_port):
@@ -21,7 +21,11 @@ def record_activity(src_ip,dst_port):
     recent_activity[src_ip].append((now,dst_port))
 
 #function for checking differnt port req from ip
-def check_port_scan(src_ip,window_seconds=10, port_threshold=15):
+def check_port_scan(src_ip):
+    rule = get_rule("port_scan")
+    window_seconds=rule["window_seconds"]
+    port_threshold=rule["unique_ports_threshold"]
+
     now=time.time()
     activity_list=recent_activity[src_ip]
 
@@ -41,13 +45,18 @@ def record_icmp(src_ip):
     now=time.time()
     icmp_activity[src_ip].append(now)
 
-def check_icmp_flood(src_ip, window_seconds=5, packet_threshold=100):
+def check_icmp_flood(src_ip):
+    rule=get_rule('icmp_flood')
+    window_seconds=rule['window_seconds']
+    packet_threshold=rule['packet_threshold']
+
     now = time.time()
     activity_list = icmp_activity[src_ip]
     recent_entries = [
         entry for entry in activity_list
         if entry > now - window_seconds
     ]
+    print(f"DEBUG: {src_ip} has {len(recent_entries)} recent ICMP packets (threshold={packet_threshold}, window={window_seconds})")  # <- new debug line
 
     if len(recent_entries) > packet_threshold:
         print(
