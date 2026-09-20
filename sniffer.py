@@ -24,6 +24,10 @@ def process_packet(packet):
             record_activity(src_ip,dst_port)
             check_port_scan(src_ip)
 
+            if flags=="S":
+                 record_syn(src_ip)
+                 check_syn_flood(src_ip)
+
 
         elif UDP in packet:
              src_port=packet[UDP].sport
@@ -80,6 +84,11 @@ def process_packet(packet):
                 insert_packet(conn,timestamp,src_ip,dest_ip,"TCPv6",src_port,dst_port,flags)
                 record_activity(src_ip,dst_port)
                 check_port_scan(src_ip)
+                
+                if flags=="S":
+                    record_syn(src_ip)
+                    check_syn_flood(src_ip)
+                
 
             elif UDP in packet:
                  src_port=packet[UDP].sport
