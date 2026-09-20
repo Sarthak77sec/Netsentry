@@ -12,9 +12,25 @@
       "id": 2,
       "name": "ICMP Flood",
       "type": "icmp_flood",
-      "packet_threshold": 20,
+      "packet_threshold": 90,
       "window_seconds": 5,
       "severity": "medium"
+    },
+    {
+      "id": 3,
+      "name": "SYN Flood",
+      "description": "Excessive TCP SYN packets from a single source IP without completed handshakes",
+      "type": "syn_flood",
+      "packet_threshold": 100,
+      "window_seconds": 5,
+      "severity": "high"
+    },
+    {
+      "id": 4,
+      "name": "Known Malicious Port",
+      "type": "malicious_port",
+      "ports": [4444, 31337, 12345, 6667],
+      "severity": "high"
     }
   ]
 }
