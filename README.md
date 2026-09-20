@@ -75,9 +75,9 @@ netsentry/
 
 - [x] Project scaffolding
 - [x] Live packet sniffer (Scapy)
-- [ ] SQLite logging
-- [ ] Signature-based rule engine (port scan, ICMP flood, malicious ports)
-- [ ] Alerting
+- [x] SQLite logging
+- [x] Signature-based rule engine (port scan, ICMP flood, malicious ports)
+- [x] Alerting
 - [ ] Streamlit dashboard
 - [ ] Test traffic generation + validation
 - [ ] Dockerize
