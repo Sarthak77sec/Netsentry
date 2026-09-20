@@ -8,9 +8,9 @@ def load_rules():
           data=json.load(f)
           return data["rules"]
      
+chached_rules=load_rules()
 def get_rule(rule_type):
-     rules=load_rules()
-     for rule in rules:
+     for rule in chached_rules:
           if rule["type"] == rule_type:
                return rule
      return None
@@ -56,7 +56,7 @@ def check_icmp_flood(src_ip):
         entry for entry in activity_list
         if entry > now - window_seconds
     ]
-    print(f"DEBUG: {src_ip} has {len(recent_entries)} recent ICMP packets (threshold={packet_threshold}, window={window_seconds})")  # <- new debug line
+
 
     if len(recent_entries) > packet_threshold:
         print(
@@ -66,3 +66,25 @@ def check_icmp_flood(src_ip):
         return True
 
     return False
+
+#checkin for syn packet flooding
+syn_activities=defaultdict(list)
+
+def record_syn(src_ip):
+     now=time.time()
+     syn_activities[src_ip].append(now)
+
+def check_syn_flood(src_ip):
+     rule = get_rule("syn_flood")
+     window_seconds=rule["window_seconds"]
+     packet_threshold=rule["packet_threshold"]
+
+     now=time.time()
+     activity_list=syn_activities[src_ip]
+     recent_entries=[entry for entry in activity_list if entry > now - window_seconds]
+
+     if len(recent_entries) > packet_threshold:
+          print(f"Alert possible SYN flood from {src_ip} - {len(recent_entries)} SYN packets in {window_seconds}s")
+          return True
+
+     return False
