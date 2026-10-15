@@ -65,8 +65,8 @@ def process_packet(packet):
             insert_packet(conn,timestamp,src_ip,dest_ip,
                           "other proto",
                           src_port=None,
-                          dst_port=None
-                          ,flags=None)
+                          dst_port=None,
+                          flags=None)
             record_icmp(src_ip)
             check_icmp_flood(src_ip)
             
@@ -84,7 +84,7 @@ def process_packet(packet):
                 insert_packet(conn,timestamp,src_ip,dest_ip,"TCPv6",src_port,dst_port,flags)
                 record_activity(src_ip,dst_port)
                 check_port_scan(src_ip)
-                
+
                 if flags=="S":
                     record_syn(src_ip)
                     check_syn_flood(src_ip)
