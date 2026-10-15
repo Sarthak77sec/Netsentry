@@ -2,7 +2,19 @@ from collections import defaultdict
 import time
 import json
 
+last_alert={}
+ALERT_COOLDOWN=30 
+
+def should_alert(src_ip,rule_type):
+     now=time.time()
+     key=(src_ip,rule_type)
+     if now - last_alert.get(key,0) > ALERT_COOLDOWN:
+          last_alert[key]=now
+          return True
+     return False
+
 recent_activity=defaultdict(list)
+
 def load_rules():
      with open("rules.json","r") as f:
           data=json.load(f)
@@ -59,9 +71,10 @@ def check_icmp_flood(src_ip):
 
 
     if len(recent_entries) > packet_threshold:
-        print(
-            f"Alert: Possible ICMP flood {src_ip} - "
-            f"{len(recent_entries)} packets in {window_seconds}s"
+        if should_alert(src_ip,"icmp_flood"):
+           print(
+               f"Alert: Possible ICMP flood {src_ip} - "
+               f"{len(recent_entries)} packets in {window_seconds}s"
         )
         return True
 
