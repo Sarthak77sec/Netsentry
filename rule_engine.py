@@ -46,8 +46,9 @@ def check_port_scan(src_ip):
     unique_ports=set(entry[1] for entry in recent_entries)
 
     if len(unique_ports) > port_threshold:
-                print(f"ALERT: Possible port scan from {src_ip} - {len(unique_ports)} ports in {window_seconds}s")
-                return True
+        if should_alert(src_ip,"port_scan"):
+           print(f"ALERT: Possible port scan from {src_ip} - {len(unique_ports)} ports in {window_seconds}s")
+        return True
     
     return False
 
@@ -97,8 +98,9 @@ def check_syn_flood(src_ip):
      recent_entries=[entry for entry in activity_list if entry > now - window_seconds]
 
      if len(recent_entries) > packet_threshold:
-          print(f"Alert possible SYN flood from {src_ip} - {len(recent_entries)} SYN packets in {window_seconds}s")
-          return True
+         if should_alert(src_ip,"syn_flood"):
+             print(f"Alert possible SYN flood from {src_ip} - {len(recent_entries)} SYN packets in {window_seconds}s")
+         return True
 
      return False
 
