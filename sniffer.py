@@ -57,7 +57,7 @@ def process_packet(packet):
                   flags=None)
 
              record_icmp(src_ip)
-             check_icmp_flood(src_ip)
+             check_icmp_flood(conn,src_ip)
 
         else:
             print(f"other IP proto:{src_ip}->{dest_ip}")
@@ -68,7 +68,7 @@ def process_packet(packet):
                           dst_port=None,
                           flags=None)
             record_icmp(src_ip)
-            check_icmp_flood(src_ip)
+            check_icmp_flood(conn,src_ip)
             
 
     elif IPv6 in packet:
@@ -104,5 +104,5 @@ def process_packet(packet):
                  timestamp=str(datetime.now())
                  insert_packet(conn,timestamp,src_ip,dest_ip,"other v6 proto",src_port=None,dst_port=None,flags=None)
                  record_icmp(src_ip)
-                 check_icmp_flood(src_ip)
+                 check_icmp_flood(conn,src_ip)
             
