@@ -19,6 +19,16 @@ def init_db():
             flags TEXT
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS alert(
+             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             timestamp TEXT,
+             src_ip TEXT,
+             rule_type TEXT,
+             severity TEXT,
+             details TEXT
+        )
+    """)
     conn.commit()
     conn.close()
 
@@ -32,4 +42,10 @@ def insert_packet(conn,timestamp,src_ip,dst_ip,protocol,src_port,dst_port,flags)
     insert_count+=1
     if insert_count % COMMIT_EVERY ==0:
         conn.commit()
-        
+
+def insert_alert(conn,timestamp,src_ip,rule_type,severity,details):
+    cursor= conn.cursor()
+    cursor.execute("""
+INSERT INTO ALERT(timestamp,src_ip,rule_type,severity,details)
+VALUES(?,?,?,?,?)""",(timestamp,src_ip,rule_type,severity,details))
+    conn.commit()
