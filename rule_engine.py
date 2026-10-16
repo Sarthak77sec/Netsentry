@@ -1,6 +1,8 @@
 from collections import defaultdict
 import time
 import json
+from datetime import datetime
+from db import insert_alert
 
 last_alert={}
 ALERT_COOLDOWN=30 
@@ -58,7 +60,7 @@ def record_icmp(src_ip):
     now=time.time()
     icmp_activity[src_ip].append(now)
 
-def check_icmp_flood(src_ip):
+def check_icmp_flood(conn,src_ip):
     rule=get_rule('icmp_flood')
     window_seconds=rule['window_seconds']
     packet_threshold=rule['packet_threshold']
@@ -73,10 +75,12 @@ def check_icmp_flood(src_ip):
 
     if len(recent_entries) > packet_threshold:
         if should_alert(src_ip,"icmp_flood"):
+           details=f"{len(recent_entries)} ICMP packets in {window_seconds}s"
            print(
                f"Alert: Possible ICMP flood {src_ip} - "
                f"{len(recent_entries)} packets in {window_seconds}s"
         )
+           insert_alert(conn,str(datetime.now()),src_ip,"icmp_flood",rule["severity"],details)
         return True
 
     return False
