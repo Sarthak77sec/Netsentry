@@ -35,7 +35,7 @@ def record_activity(src_ip,dst_port):
     recent_activity[src_ip].append((now,dst_port))
 
 #function for checking differnt port req from ip
-def check_port_scan(src_ip):
+def check_port_scan(conn,src_ip):
     rule = get_rule("port_scan")
     window_seconds=rule["window_seconds"]
     port_threshold=rule["unique_ports_threshold"]
@@ -49,7 +49,9 @@ def check_port_scan(src_ip):
 
     if len(unique_ports) > port_threshold:
         if should_alert(src_ip,"port_scan"):
+           details=f"{len(unique_ports)} unique ports in {window_seconds}s"
            print(f"ALERT: Possible port scan from {src_ip} - {len(unique_ports)} ports in {window_seconds}s")
+           insert_alert(conn,str(datetime.now()),src_ip,"port_scan",rule["severity"],details)
         return True
     
     return False
@@ -92,7 +94,7 @@ def record_syn(src_ip):
      now=time.time()
      syn_activities[src_ip].append(now)
 
-def check_syn_flood(src_ip):
+def check_syn_flood(conn,src_ip):
      rule = get_rule("syn_flood")
      window_seconds=rule["window_seconds"]
      packet_threshold=rule["packet_threshold"]
@@ -103,7 +105,10 @@ def check_syn_flood(src_ip):
 
      if len(recent_entries) > packet_threshold:
          if should_alert(src_ip,"syn_flood"):
-             print(f"Alert possible SYN flood from {src_ip} - {len(recent_entries)} SYN packets in {window_seconds}s")
+            details=f"{len(recent_entries)} SYN packets in {window_seconds}s"
+            print(f"Alert possible SYN flood from {src_ip} - {len(recent_entries)} SYN packets in {window_seconds}s")
+            insert_alert(conn,str(datetime.now()),src_ip,"syn_flood",rule["severity"],details)
+         
          return True
 
      return False
