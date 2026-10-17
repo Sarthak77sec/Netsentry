@@ -22,11 +22,11 @@ def process_packet(packet):
             print(f"TCP{src_ip}:{src_port}->{dest_ip}:{dst_port} flags={flags}")
             insert_packet(conn,timestamp,src_ip,dest_ip,"TCPv4",src_port,dst_port,flags)
             record_activity(src_ip,dst_port)
-            check_port_scan(src_ip)
+            check_port_scan(conn,src_ip)
 
             if flags=="S":
                  record_syn(src_ip)
-                 check_syn_flood(src_ip)
+                 check_syn_flood(conn,src_ip)
 
 
         elif UDP in packet:
@@ -39,7 +39,7 @@ def process_packet(packet):
                            src_ip,
                            dest_ip,"UDPv4",src_port,dst_port,flags=None)
              record_activity(src_ip,dst_port)
-             check_port_scan(src_ip)
+             check_port_scan(conn,src_ip)
              
         elif ICMP in packet:
              timestamp = str(datetime.now())
@@ -83,11 +83,11 @@ def process_packet(packet):
                 print(f"TCP6{src_ip}:{src_port}->{dest_ip}:{dst_port} flags={flags}")
                 insert_packet(conn,timestamp,src_ip,dest_ip,"TCPv6",src_port,dst_port,flags)
                 record_activity(src_ip,dst_port)
-                check_port_scan(src_ip)
+                check_port_scan(conn,src_ip)
 
                 if flags=="S":
                     record_syn(src_ip)
-                    check_syn_flood(src_ip)
+                    check_syn_flood(conn,src_ip)
                 
 
             elif UDP in packet:
@@ -97,7 +97,7 @@ def process_packet(packet):
                  timestamp=str(datetime.now())
                  insert_packet(conn,timestamp,src_ip,dest_ip,"UDPv6",src_port,dst_port,flags=None)
                  record_activity(src_ip,dst_port)
-                 check_port_scan(src_ip)  
+                 check_port_scan(conn,src_ip)  
                  
             else:
                  print(f"other IPV6 proto {src_ip}->{dest_ip}")  
